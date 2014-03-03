@@ -154,7 +154,7 @@ public class SpriteTextRenderer implements GLSurfaceView.Renderer{
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
 
-        GLU.gluLookAt(gl, 0.0f, 2.0f, 1.5f,
+        GLU.gluLookAt(gl, 0.0f, 0.0f, -2.5f,
                 0.0f, 0.0f, 0.0f,
                 0.0f, 1.0f, 0.0f);
 
@@ -171,30 +171,21 @@ public class SpriteTextRenderer implements GLSurfaceView.Renderer{
         long time = SystemClock.uptimeMillis() % 4000L;
         float angle = 0.090f * ((int) time);
 
-        gl.glTranslatef(0f, 0f, 0f);
         gl.glRotatef(angle, 0, 0, 1.0f);
-//        gl.glScalef(2.0f, 2.0f, 2.0f);
+        gl.glScalef(2.0f, 2.0f, 2.0f);
 
         mTriangle.draw(gl);
 
-        for (int i = 0; i < 10; i++) {
-            gl.glLoadIdentity();
-            gl.glTranslatef(0f, 0f, -5.0f * i);
-            gl.glRotatef(angle, 0, 0, 1.0f);
-            mTriangle.draw(gl);
-        }
+        mProjector.getCurrentModelView(gl);
+        mLabels.beginDrawing(gl, mWidth, mHeight);
+        drawLabel(gl, 0, mLabelA);
+        drawLabel(gl, 1, mLabelB);
+        drawLabel(gl, 2, mLabelC);
+        float msPFX = mWidth - mLabels.getWidth(mLabelMsPF) - 1;
+        mLabels.draw(gl, msPFX, 0, mLabelMsPF);
+        mLabels.endDrawing(gl);
 
-
-//        mProjector.getCurrentModelView(gl);
-//        mLabels.beginDrawing(gl, mWidth, mHeight);
-//        drawLabel(gl, 0, mLabelA);
-//        drawLabel(gl, 1, mLabelB);
-//        drawLabel(gl, 2, mLabelC);
-//        float msPFX = mWidth - mLabels.getWidth(mLabelMsPF) - 1;
-//        mLabels.draw(gl, msPFX, 0, mLabelMsPF);
-//        mLabels.endDrawing(gl);
-//
-//        drawMsPF(gl, msPFX);
+        drawMsPF(gl, msPFX);
     }
 
     private void drawMsPF(GL10 gl, float rightMargin) {
@@ -236,7 +227,6 @@ public class SpriteTextRenderer implements GLSurfaceView.Renderer{
     public void onSurfaceChanged(GL10 gl, int w, int h) {
         mWidth = w;
         mHeight = h;
-        // 设置视口
         gl.glViewport(0, 0, w, h);
         mProjector.setCurrentView(0, 0, w, h);
 
@@ -247,19 +237,9 @@ public class SpriteTextRenderer implements GLSurfaceView.Renderer{
         */
 
         float ratio = (float) w / h;
-        // 设置变换矩阵类型
         gl.glMatrixMode(GL10.GL_PROJECTION);
-        // 将当前矩阵替换为单位矩阵
         gl.glLoadIdentity();
-
-        float left = -ratio, right = ratio, bottom = -1, top = 1, near = 1, far = 10;
-
-//        left = ratio;right = -ratio;
-//        left = 1; right = -1;
-//        bottom = -3; top = 1;
-//        near = 1; far = 5;
-
-        gl.glFrustumf(left, right, bottom, top, near, far);
+        gl.glFrustumf(-ratio, ratio, -1, 1, 1, 10);
         mProjector.getCurrentProjection(gl);
     }
 
