@@ -188,8 +188,8 @@ public class LabelMaker {
         int measuredTextWidth = 0;
         if (drawText) {
             // Paint.ascent is negative, so negate it.
-            ascent = (int) Math.ceil(-textPaint.ascent());
-            descent = (int) Math.ceil(textPaint.descent());
+            ascent = (int) Math.ceil(-textPaint.ascent());  // 基线到字符最高点高度
+            descent = (int) Math.ceil(textPaint.descent()); // 基线到字符最低点高度
             measuredTextWidth = (int) Math.ceil(textPaint.measureText(text));
         }
         int textHeight = ascent + descent;
@@ -199,6 +199,7 @@ public class LabelMaker {
         int padWidth = padding.left + padding.right;
         int height = Math.max(minHeight, textHeight + padHeight);
         int width = Math.max(minWidth, textWidth + padWidth);
+        // 有效字符尺寸 去除padding
         int effectiveTextHeight = height - padHeight;
         int effectiveTextWidth = width - padWidth;
 
@@ -326,6 +327,7 @@ public class LabelMaker {
         gl.glBindTexture(GL10.GL_TEXTURE_2D, mTextureID);
         gl.glShadeModel(GL10.GL_FLAT);
         gl.glEnable(GL10.GL_BLEND);
+        // 混合函数
         gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
         gl.glColor4x(0x10000, 0x10000, 0x10000, 0x10000);
         gl.glMatrixMode(GL10.GL_PROJECTION);
@@ -336,6 +338,7 @@ public class LabelMaker {
         gl.glPushMatrix();
         gl.glLoadIdentity();
         // Magic offsets to promote consistent rasterization.
+        // 设置一致的光标位置
         gl.glTranslatef(0.375f, 0.375f, 0.0f);
     }
 

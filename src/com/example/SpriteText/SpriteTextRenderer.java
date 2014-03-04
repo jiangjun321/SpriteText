@@ -171,7 +171,7 @@ public class SpriteTextRenderer implements GLSurfaceView.Renderer{
         long time = SystemClock.uptimeMillis() % 4000L;
         float angle = 0.090f * ((int) time);
 
-        gl.glRotatef(angle, 0, 0, 1.0f);
+//        gl.glRotatef(angle, 0, 0, 1.0f);
         gl.glScalef(2.0f, 2.0f, 2.0f);
 
         mTriangle.draw(gl);
